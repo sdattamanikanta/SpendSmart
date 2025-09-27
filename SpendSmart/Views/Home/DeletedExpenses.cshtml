@@ -1,13 +1,11 @@
-﻿@{
-    ViewData["Title"] = "Expenses";
+﻿
+@{
+    ViewData["Title"] = "DeletedExpenses";
 }
 
 @model List<Expense>
 <div class="text-center">
-    <h1 class="display-4">Expenses</h1>
-    <br />
-    <hr />
-    <h3>Total Expenses: $@ViewBag.Expenses</h3>
+    <h1 class="display-4">Deleted Expenses List</h1>
     <table class="table">
         <thead>
             <tr>
@@ -18,15 +16,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(var expense in Model)
+            @foreach (var expense in Model)
             {
                 <tr>
                     <td>@expense.Id</td>
                     <td>@expense.Value</td>
                     <td>@expense.Description</td>
                     <td>
-                        <a asp-action="CreateEditExpense" asp-route-id="@expense.Id">Edit</a>
-                        <a asp-action="DeleteExpense" asp-route-id="@expense.Id">Delete</a>
+                        <a asp-action="RestoreExpense" asp-route-id="@expense.Id">Restore</a>
                     </td>
                 </tr>
             }

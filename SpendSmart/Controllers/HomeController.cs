@@ -22,7 +22,7 @@ namespace SpendSmart.Controllers
 
         public IActionResult Expenses()
         {
-            var allExpenses = _context.expenses.ToList();
+            var allExpenses = _context.expenses.Where(x => !x.IsDeleted).ToList();
             var totalExpenses = allExpenses.Sum(x => x.Value);
             ViewBag.Expenses = totalExpenses;
             return View(allExpenses);
@@ -38,11 +38,15 @@ namespace SpendSmart.Controllers
             }
            return View();
         }
+
         public IActionResult DeleteExpense(int id)
         {
             var expense = _context.expenses.SingleOrDefault(x => x.Id == id);
-            _context.expenses.Remove(expense);
-            _context.SaveChanges();
+            if (expense != null)
+            {
+                expense.IsDeleted = true;
+                _context.SaveChanges();
+            }
             return RedirectToAction("Expenses");
         }
 
@@ -61,6 +65,22 @@ namespace SpendSmart.Controllers
             return RedirectToAction("Expenses");
         }
 
+        public IActionResult DeletedExpenses()
+        {
+            var deletedExpenses = _context.expenses.Where(x => x.IsDeleted).ToList();
+            return View(deletedExpenses);
+        }
+
+        public IActionResult RestoreExpense(int id)
+        {
+            var expense = _context.expenses.SingleOrDefault(x => x.Id == id);
+            if (expense != null)
+            {
+                expense.IsDeleted = false;
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Expenses");
+        }
         public IActionResult Privacy()
         {
             return View();
